@@ -11,7 +11,7 @@ import os
 import torch
 import csv
 import sys
-sys.path.insert(1, 'C:/proyectos/brain-inspired-replay/')
+sys.path.insert(1, 'path_to/brain-inspired-replay/')
 
 from models.classifier import Classifier
 from models.vae import AutoEncoder
@@ -19,15 +19,15 @@ from define_models import init_params
 
 device = 'cpu'
 photos = [
-    # 'butterfly', #task1
-    # 'television', #task2
-    # 'castle', #task3
-    # 'pear', #task4
-    # 'lion', #task5
-    # 'mushroom', #task6
-    # 'tank', #task7
+    'butterfly', #task1
+    'television', #task2
+    'castle', #task3
+    'pear', #task4
+    'lion', #task5
+    'mushroom', #task6
+    'tank', #task7
     'dinosaur', #task8
-    # 'keyboard', #task8
+    'keyboard', #task8
     ]
 
 id_fine = {26: 'apple',
@@ -157,20 +157,6 @@ def load_checkpoint(model, model_dir, verbose=True, name=None, add_si_buffers=Fa
 #####################################################################################
 
 def example():
-    ######################### Elastic Weight Consolidation (EWC) #########################
-    # model = Classifier(image_size=32, image_channels=3, classes=99, conv_type='standard', 
-    #             depth=5, start_channels=16, reducing_layers=4,
-    #             conv_bn = True, conv_nl ='relu', num_blocks = 2,
-    #             global_pooling=False, fc_layers=3, fc_units=2000, h_dim=2000,
-    #             fc_drop=0.0, fc_bn=False, fc_nl='relu', hidden=False, excit_buffer=True,
-    #         )
-    
-    # model.ewc = True
-    # model.fisher_n = 1000
-
-    # load_checkpoint(model, '../brain-inspired-replay/store/models', name='ewc_task3.pt')
-    ################################################################################
-
     ######################### Generative Replay (GR) #########################
     # model = AutoEncoder(image_size=32, image_channels=3, classes=100, conv_type='standard', 
     #             depth=5, start_channels=16, reducing_layers=4,
@@ -193,43 +179,6 @@ def example():
                 bias=True, excitability=False, hidden=False
             )
     ################################################################################
-
-
-    ######################### Learning Without Forgetting LwF #########################
-    # model = Classifier(image_size=32, image_channels=3, classes=100, conv_type='standard', 
-            #     depth=5, start_channels=16, reducing_layers=4,
-            #     conv_bn = True, conv_nl ='relu', num_blocks = 2,
-            #     global_pooling=False, no_fnl=True, conv_gated=False, fc_layers=3, fc_units=2000, h_dim=2000,
-            #     fc_drop=0.0, fc_bn=False, fc_nl='relu', excit_buffer=True, fc_gated=False,
-            #     bias=True, excitability=False, hidden=False
-            # )
-
-    # load_checkpoint(model, '../brain-inspired-replay/store/models', name='ewc_task1_iteration1.pt')
-    ################################################################################
-
-    ######################### Context-dependent-Gating(XdG) #########################
-    # model = Classifier(image_size=32, image_channels=3, classes=100, conv_type='standard', 
-    #             depth=5, start_channels=16, reducing_layers=4,
-    #             conv_bn = True, conv_nl ='relu', num_blocks = 2,
-    #             global_pooling=False, no_fnl=True, conv_gated=False, fc_layers=3, fc_units=2000, h_dim=2000,
-    #             fc_drop=0.0, fc_bn=False, fc_nl='relu', excit_buffer=True, fc_gated=False,
-    #             bias=True, excitability=False, hidden=False
-    #         )
-
-    # load_checkpoint(model, '../brain-inspired-replay/store/models', name='ewc_task1_iteration1.pt')
-    ################################################################################
-
-    ######################### Synaptic Intelligenc (SI) #########################
-    # model = Classifier(image_size=32, image_channels=3, classes=100, conv_type='standard', 
-    #             depth=5, start_channels=16, reducing_layers=4,
-    #             conv_bn = True, conv_nl ='relu', num_blocks = 2,
-    #             global_pooling=False, no_fnl=True, conv_gated=False, fc_layers=3, fc_units=2000, h_dim=2000,
-    #             fc_drop=0.0, fc_bn=False, fc_nl='relu', excit_buffer=True, fc_gated=False,
-    #             bias=True, excitability=False, hidden=False
-    #         )
-
-    # load_checkpoint(model, '../brain-inspired-replay/store/models', name='ewc_task1_iteration1.pt')
-    ##############################################################################
 
     i = 0
     aux = ''
@@ -264,13 +213,9 @@ def example():
                     normed_torch_img = transforms.Normalize(mean=[0.5071, 0.4865, 0.4409], std=[0.2673, 0.2564, 0.2761])(torch_img)[None]
 
                     ############## loop for model layers ###################
-                    # print(model)
                     combinations = ['.conv', '.bn', '.nl']
                     for name, layer in model.named_modules():
                         if name.startswith('convE') and any(map(name.endswith, combinations)) and (int(name[15]) == 3 or int(name[15]) == 5):
-                            # aux = 'model.' + name
-                            # aux = aux.replace('.weight', '')
-                            # aux = locals()[aux]
                     ########################################################
                             model.eval()
                             target_layer = layer
@@ -307,26 +252,3 @@ def example():
 
 if __name__ == '__main__':
     example()
-
-
-# with open('Lacunarity_study.csv', 'a', newline='') as file:
-#         lacu2 = lacunarity(example, 2)
-#         lacu4 = lacunarity(example, 4)
-#         empty_globals()
-#         lacu8 = lacunarity(example, 8)
-    
-#         pix_sum = red_count + orange_count + yellow_count + remainder_count
-
-#         lacu2 = str(lacu2).replace('.', ',')
-#         lacu4 = str(lacu4).replace('.', ',')
-#         lacu8 = str(lacu8).replace('.', ',')
-#         pix_sum = str(pix_sum).replace('.', ',')
-#         red_pixels = str(red_count).replace('.', ',')
-#         orange_pixels = str(orange_count).replace('.', ',')
-#         yellow_pixels = str(yellow_count).replace('.', ',')
-#         remainder_pixels = str(remainder_count).replace('.', ',')
-
-#         writer = csv.writer(file)
-#         # if i == 0:
-#         writer.writerow(["Image", "2x2 Lacunarity", "4x4 Lacunarity", "8x8 Lacunarity", "Red pixels", "Orange pixels", "Yellow pixels", "Remainder pixels", "Pixel sum"])
-#         writer.writerow(["0007.png", lacu2, lacu4, lacu8, red_pixels, orange_pixels, yellow_pixels, remainder_pixels, pix_sum])
